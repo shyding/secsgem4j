@@ -1,30 +1,40 @@
 package com.shimizukenta.secs.ext.config;
 
-import java.util.Map;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import javax.management.RuntimeErrorException;
 
+import org.apache.commons.collections4.map.MultiKeyMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+
+import com.shimizukenta.secs.OpenAndCloseable;
+import com.shimizukenta.secs.SecsCommunicator;
 import com.shimizukenta.secs.SecsException;
 import com.shimizukenta.secs.SecsLog;
 import com.shimizukenta.secs.SecsLogListener;
 import com.shimizukenta.secs.SecsMessage;
 import com.shimizukenta.secs.SecsSendMessageException;
 import com.shimizukenta.secs.SecsWaitReplyMessageException;
+import com.shimizukenta.secs.ext.annotation.SecsMsgListener;
+import com.shimizukenta.secs.ext.util.SecsUtils;
+import com.shimizukenta.secs.ext.util.SpringUtils;
 import com.shimizukenta.secs.hsms.HsmsMessage;
 import com.shimizukenta.secs.hsms.HsmsReceiveMessageLog;
-import com.shimizukenta.secs.hsmsss.HsmsSsCommunicator;
+import com.shimizukenta.secs.hsms.HsmsSession;
+import com.shimizukenta.secs.hsmsgs.HsmsGsCommunicator;
+import com.shimizukenta.secs.hsmsgs.HsmsGsUnknownSessionIdException;
 import com.shimizukenta.secs.secs2.Secs2;
-import com.shimizukenta.secs.utils.ConfigConstants;
-import com.shimizukenta.secs.utils.SecsUtils ;
-import lombok.extern.slf4j.Slf4j;
+
+
 
 /**
  * 抽象消息接收者
@@ -32,8 +42,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author dsy
  *
  */
-@Slf4j
-public abstract class AbstractSecsMsgListener implements SecsLogListener ,ApplicationContextAware {
+
+@Order( value = Ordered.LOWEST_PRECEDENCE )
+@SecsMsgListener
+public abstract class AbstractSecsMsgListener implements SecsLogListener  {
+
+
+	private final Logger logger = LoggerFactory.getLogger(AbstractSecsMsgListener.class);
 
 
 	/**
@@ -43,17 +58,8 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 	
 	public  static final String HANDLERS_STR = "HANDLERS";
 	
-	/**
-	 * 单会话通讯器
-	 */
 	
-	protected static HsmsSsCommunicator hsmsSsCommunicator; 
-	
-	/**
-	 * 多会话预留
-	 */
-	
-	protected static Map<String ,HsmsSsCommunicator> hsmsSsCommunicators; 
+	public  static OpenAndCloseable  secsCommunicator; ;
 	
 	
 	/**
@@ -63,7 +69,13 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 	
 	
 	
-
+	/** 打印所有日志
+	 * @return
+	 */
+	public boolean logAll() {
+		
+		return false;
+	}
 
 
 	@Override
@@ -86,7 +98,11 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 						/**
 						 * 没有对应的处理类
 						 */
-						log.error("received_ignore_data_msg:{}",  msg );
+						if(this.logAll()) {
+							logger.error("inhandler:{}, received_ignore_data_msg:{}",this.getClass().getName(),   msg );
+
+						}
+
 //						try {
 //							hsmsSsCommunicator.send(9, 9 , false) ;
 //						} catch (SecsException | InterruptedException e) {
@@ -97,6 +113,8 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 
 			}
 
+		}else {
+			logger.warn("data:{}", event);
 		}
 		
 	
@@ -104,23 +122,41 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 	}
 
 
-	/** 通过传入的通讯器回复消息
-	 * @param hsmsSsCommunicator
-	 * @param primary
-	 * @param wbit
-	 * @param secs2
+	
+	
+	/**获得通讯器
 	 * @return
-	 * @throws SecsSendMessageException
-	 * @throws SecsWaitReplyMessageException
-	 * @throws SecsException
-	 * @throws InterruptedException
 	 */
-	public static Optional<SecsMessage>  reply(HsmsSsCommunicator hsmsSsCommunicator , SecsMessage primary,  boolean wbit, Secs2 secs2) throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException {
+	public static SecsCommunicator getSecsCommunicator(int sessionId) {
 		
-		return hsmsSsCommunicator.send(primary, primary.getStream(), primary.getFunction() + 1 , wbit, secs2);
+		 OpenAndCloseable openAndCloseable = SpringUtils.getBean( OpenAndCloseable.class) ;
+		 boolean gs = SecsUtils.isGs(openAndCloseable);
+		 if( !gs) {
+			 return (SecsCommunicator)openAndCloseable;
+		 }else {
+			 HsmsGsCommunicator hsmsGsCommunicator = (HsmsGsCommunicator)openAndCloseable;
+			 
+			try {
+				HsmsSession hsmsSession = hsmsGsCommunicator.getSession(sessionId);
+				return hsmsSession ;
+			} catch (HsmsGsUnknownSessionIdException e) {
+				// TODO Auto-generated catch block
+				throw new RuntimeException(e);
+			}
+			 
+			
+		 }
+		 
+		
 	}
 	
 	
+	
+	public static void setSecsCommunicator(OpenAndCloseable secsCommunicator) {
+		AbstractSecsMsgListener.secsCommunicator = secsCommunicator;
+	}
+
+
 	/** 通过容器中的通讯器回复消息
 	 * @param primary
 	 * @param wbit
@@ -132,24 +168,30 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 	 * @throws InterruptedException
 	 */
 	public static Optional<SecsMessage>  reply(SecsMessage primary,  boolean wbit, Secs2 secs2) throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException {
-		
-		return reply(hsmsSsCommunicator, primary, wbit, secs2);
+		int stream = primary.getStream();
+		int function = primary.getFunction();
+		int sessionId = primary.sessionId();
+		return send( sessionId, stream , function +1 , wbit, secs2);
 	}
 	
-	
-    /** 不等待消息回复消息
-     * @param primary
-     * @param secs2
-     * @return
-     * @throws SecsSendMessageException
-     * @throws SecsWaitReplyMessageException
-     * @throws SecsException
-     * @throws InterruptedException
-     */
-    public static Optional<SecsMessage>  reply(SecsMessage primary,  Secs2 secs2) throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException {
-		
-		return reply(hsmsSsCommunicator, primary, false, secs2);
+
+	/** 指定回话器
+	 * @param secsCommunicator
+	 * @param primary
+	 * @param wbit
+	 * @param secs2
+	 * @return
+	 * @throws SecsSendMessageException
+	 * @throws SecsWaitReplyMessageException
+	 * @throws SecsException
+	 * @throws InterruptedException
+	 */
+	public static Optional<SecsMessage>  reply(SecsCommunicator secsCommunicator ,SecsMessage primary,  boolean wbit, Secs2 secs2) throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException {
+		int stream = primary.getStream();
+		int function = primary.getFunction();
+		return secsCommunicator.send( stream , function + 1 , wbit, secs2);
 	}
+	
 
 	
 	/**
@@ -167,33 +209,17 @@ public abstract class AbstractSecsMsgListener implements SecsLogListener ,Applic
 	  * @return Optional<SecsMessage>    返回类型
 	  * @throws
 	  */
-	public  static Optional<SecsMessage> send(int strm, int func, boolean wbit, Secs2 secs2)
+	public  static Optional<SecsMessage> send( int sessionId , int strm, int func, boolean wbit, Secs2 secs2)
 			throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException {
 		
-		return hsmsSsCommunicator.send(strm, func, wbit, secs2);
+		return getSecsCommunicator( sessionId ).send(strm, func, wbit, secs2);
 	}
 	
 	
 	public static Optional<SecsMessage> send(SecsMessage primaryMsg, int strm, int func, boolean wbit) throws SecsSendMessageException, SecsWaitReplyMessageException, SecsException, InterruptedException{
 		
-		return hsmsSsCommunicator.send(primaryMsg, strm, func, wbit);
+		return getSecsCommunicator( primaryMsg.sessionId() ).send(primaryMsg, strm, func, wbit);
 	}
 	
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setApplicationContext(ApplicationContext cxt) throws BeansException {
-		
-		if(cxt.containsBean(ConfigConstants.HSMS_SS_COMMUNICATOR)) {
-			hsmsSsCommunicator = cxt.getBean( HsmsSsCommunicator.class);
-		}
-		
-		if(cxt.containsBean(ConfigConstants.HSMS_SS_COMMUNICATORS)) {
-			hsmsSsCommunicators = (Map<String ,HsmsSsCommunicator>)cxt.getBean(ConfigConstants.HSMS_SS_COMMUNICATORS);
-		}
-		
 
-	}
-
-    
 }

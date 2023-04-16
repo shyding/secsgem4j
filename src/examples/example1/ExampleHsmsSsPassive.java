@@ -55,7 +55,14 @@ public class ExampleHsmsSsPassive {
 				) {
 			
 			comm.addSecsLogListener(System.out::println);
+			comm.addSecsCommunicatableStateChangeListener( lsnr -> {
+				System.out.println("ss: " +lsnr);
+				System.out.println("ss: " +lsnr);
+				System.out.println("ss: " +lsnr);
+				System.out.println("ss: " +lsnr);
+				System.out.println("ss: " +lsnr);
 			
+			});
 			comm.addSecsMessageReceiveListener(msg -> {
 				
 				try {

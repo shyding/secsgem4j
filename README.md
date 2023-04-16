@@ -1,8 +1,23 @@
-# secs4java8
+# secsgem4j
 
 ## Introduction
 
 This library is SEMI-SECS-communicate implementation on Java8.
+
+
+
+[Demo]: https://github.com/shyding/secsgem4j-demo.git
+
+
+
+## Thanks
+
+**------**
+
+  \* [
+kenta-shimizu](https://github.com/kenta-shimizu/secs4java8/commits?author=kenta-shimizu)   https://github.com/kenta-shimizu/secs4java8.git`_ for his SEMI SECS socket implementation
+
+  \* [bparzella](https://github.com/bparzella) <https://github.com/massimov>`_ for his help on Simple Python SECS/GEM implementation
 
 ## Supports
 
@@ -456,36 +471,68 @@ See also ["/src/examples/example5/ExampleGem.java"](/src/examples/example5/Examp
 
 # springboot with intergration 
 
+1.  **in your boot Class  add  @EnableSecs**
+
+   
+
+   package com.shyding.demo;
+
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+   import com.shimizukenta.secs.ext.annotation.EnableSecs;
+
+   @EnableSecs
+   @SpringBootApplication
+   public class Application {
+
+   ```java
+   public static void main(String[] args) {
+   	SpringApplication.run(Application.class, args);
+   }
+   ```
+
+   }
+
+2. **in your  application.properties** 
+
+```properties
+
+ ####  ss  passive test start passive config###
+#additions.secs.hsms.ss.enabled=true
+#additions.secs.hsms.ss.logSubjectHeader=demoPassive :
+ ####  ss  passive test end passive config###
+
+ 
+  ####  ss  passive test start active config###
+#additions.secs.hsms.ss.enabled=true
+#additions.secs.hsms.ss.logSubjectHeader=demoActive :
+#additions.secs.hsms.ss.connection-mode=ACTIVE
+ ####  ss  passive test end active config###
 
 
-   - ## in your  application.yml  
+ ####  ss  passive test start passive config###
+#additions.secs.hsms.gs.enabled=true
+#additions.secs.hsms.gs.logSubjectHeader=demoGsPassive :
+#additions.secs.hsms.gs.session-ids[0]=65535
+#additions.secs.hsms.gs.session-ids[1]=2
+ ####  ss  passive test end passive config###
 
-     add :
-
-```yaml
-additions:
-  devices:
-    hsms:
-      enabled: true
-      props:
-        host: 127.0.0.1
-        port: 5000
-        #PASSIVE 被动服务器模式, ACTIVE: 主动客户端模式
-        protocol: ACTIVE
-        isEquip: false 
-       #打印详细的日志
-        logDetail: true
+  ####  ss  passive test start active config###
+additions.secs.hsms.gs.enabled=true
+additions.secs.hsms.gs.logSubjectHeader=demoGsActive :
+additions.secs.hsms.gs.session-ids[0]=9
+#additions.secs.hsms.gs.session-ids[1]=2
+additions.secs.hsms.gs.try-select-request=true
+ ####  ss  passive test end active config###
 ```
 
-#       demo handler
-
-
+**3 . demo handler**
 
 
 ```java
-@Async
-@Sf(s = 18, f = 71)
-priv@Slf4j
+
+@Slf4j
 @SecsMsgListener
 public class DemoHandler extends AbstractSecsMsgListener {
 
@@ -523,3 +570,264 @@ public class DemoHandler extends AbstractSecsMsgListener {
 
 
 
+## GEM Compliance
+
+| GEM COMPLIANCE STATEMENT                           |
+
++=======================================+=================+=========+=========+
+
+| **Fundamental GEM Requirements**    | **Implemented** | **GEM Compliant** |
+
++---------------------------------------+-----------------+---------+---------+
+
+| `State Models`_            | Yes ✓      | No    | No    |
+
++---------------------------------------+-----------------+---------+     +
+
+| `Equipment Processing States`_     | No        | No    |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| Host-Initiated S1,F13/F14 Scenario   | Yes ✓      | Yes ✓  |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| Event Notification           | Yes ✓      | Yes ✓  |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| On-Line Identification         | Yes ✓      | Yes ✓  |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| Error Messages             | Yes ✓      | Yes ✓  |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| `Documentation`_            | Yes ✓      | No    |     |
+
++---------------------------------------+-----------------+---------+     +
+
+| `Control (Operator Initiated)`_    | Yes ✓      | No    |     |
+
++---------------------------------------+-----------------+---------+---------+
+
+| **Additional Capabilities**      | **Implemented** | **GEM Compliant** |
+
++---------------------------------------+-----------------+-------------------+
+
+| Establish Communications        | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Dynamic Event Report Configuration`_ | Yes ✓      | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| Variable Data Collection        | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Trace Data Collection`_        | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| Status Data Collection         | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Alarm Management`_          | Yes ✓      | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Remote Control`_           | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Equipment Constants`_         | Yes ✓      | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Process Recipe Management`_      | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Material Movement`_          | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Equipment Terminal Services`_     | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Clock`_                | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Limits Monitoring`_          | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| `Spooling`_              | No        | No         |
+
++---------------------------------------+-----------------+-------------------+
+
+| Control (Host-Initiated)        | Yes ✓      | Yes ✓       |
+
++---------------------------------------+-----------------+-------------------+
+
+
+
+State Models
+
+**++++++++++++**
+
+
+
+\* While the communication and control state models are implemented, especially the control state model needs rework.
+
+
+
+Equipment Processing States
+
+**+++++++++++++++++++++++++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Documentation
+
+**+++++++++++++**
+
+
+
+\* The documentation isn't complete yet. 
+
+
+
+Control (Operator Initiated)
+
+**++++++++++++++++++++++++++++**
+
+
+
+\* Persistence for the ONLINE LOCAL/REMOTE is not yet implemented.
+
+\* The final UI (or hardware) needs the buttons required by this section. 
+
+
+
+Dynamic Event Report Configuration
+
+**++++++++++++++++++++++++++++++++++**
+
+
+
+\* Persistence for report definitions, report-to-event links and enable status is not yet implemented.
+
+
+
+Trace Data Collection
+
+**+++++++++++++++++++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Alarm Management
+
+**++++++++++++++++**
+
+
+
+\* Persistence of en-/disable states and report definitions is not implemented yet.
+
+
+
+Remote Control
+
+**++++++++++++++**
+
+
+
+\* The START and STOP remote commands must be implemented to be GEM compliant. Currently only dummy functions are provided
+
+
+
+Equipment Constants
+
+**+++++++++++++++++++**
+
+
+
+\* Persistence of the equipment constants is not implemented yet.
+
+\* Limiting changing equipment to "safe" states is not yet implemented?
+
+\* Equipment constant changed collection event is not yet implemented.
+
+
+
+Process Recipe Management
+
+**+++++++++++++++++++++++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Material Movement
+
+**+++++++++++++++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Equipment Terminal Services
+
+**+++++++++++++++++++++++++++**
+
+
+
+\* The UI requirements can't be fulfilled by the library
+
+
+
+Clock
+
+**+++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Limits Monitoring
+
+**+++++++++++++++++**
+
+
+
+\* Not implemented yet.
+
+
+
+Spooling
+
+**++++++++**
+
+
+
+\* Not implemented yet.

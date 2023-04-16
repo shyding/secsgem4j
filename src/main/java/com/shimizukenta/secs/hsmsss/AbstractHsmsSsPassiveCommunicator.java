@@ -294,7 +294,8 @@ public abstract class AbstractHsmsSsPassiveCommunicator extends AbstractHsmsSsCo
 							
 							for ( ;; ) {
 								final AbstractHsmsMessage msg = queue.take();
-								
+								int sessionId = msg.sessionId();
+								int deviceId = msg.deviceId();
 								switch ( msg.messageType() ) {
 								case DATA: {
 									this.notifyReceiveMessage(msg);

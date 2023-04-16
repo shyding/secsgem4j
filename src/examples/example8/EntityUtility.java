@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.shimizukenta.secs.SecsCommunicator;
 import com.shimizukenta.secs.SecsException;
+import com.shimizukenta.secs.SecsMessage;
 import com.shimizukenta.secs.gem.ACKC5;
 import com.shimizukenta.secs.gem.ACKC6;
 import com.shimizukenta.secs.gem.CMDA;
@@ -23,6 +25,7 @@ import com.shimizukenta.secs.hsmsss.HsmsSsCommunicator;
 import com.shimizukenta.secs.hsmsss.HsmsSsCommunicatorConfig;
 import com.shimizukenta.secs.secs2.Secs2;
 import com.shimizukenta.secs.secs2.Secs2Exception;
+import com.shimizukenta.secs.secs2.Secs2List;
 import com.shimizukenta.secs.util.AbstractSecsCommunicatorEntity;
 import com.shimizukenta.secs.util.SecsCommunicatorEntity;
 
@@ -267,12 +270,13 @@ public class EntityUtility {
 	private static void executeS6F11(SecsCommunicatorEntity entity, Trigger trigger) throws InterruptedException {
 		
 		try {
-			entity.send(
+			Secs2List list = Secs2.list();
+			Optional<SecsMessage> send = entity.send(
 					6, 11, true,
 					Secs2.list(
 							entity.gem().autoDataId(),
 							Secs2.uint2(trigger.ceid()),
-							Secs2.list()
+							list
 							)
 					);
 		}

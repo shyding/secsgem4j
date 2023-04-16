@@ -304,6 +304,7 @@ public abstract class AbstractHsmsGsCommunicator extends AbstractBaseCommunicato
 			case SELECT_REQ: {
 				
 				final int id = msg.sessionId();
+//				int deviceId = msg.deviceId();
 				
 				boolean responsed = false;
 				

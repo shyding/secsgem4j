@@ -13,19 +13,17 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import com.shimizukenta.secs.SecsMessage;
-import com.shimizukenta.secs.ext.annotation.SecsMsgListener;
 import com.shimizukenta.secs.ext.annotation.Sf;
-
-import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -33,18 +31,21 @@ import lombok.extern.slf4j.Slf4j;
  * @author dsy
  *
  */
-@Slf4j
+
 public class SecsAnnotationPostProcessor implements BeanPostProcessor {
 
   
+	private final Logger logger = LoggerFactory.getLogger(SecsAnnotationPostProcessor.class);
 
 	@Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		
         final Class<?> ultimateTargetClass = AopProxyUtils.ultimateTargetClass(bean);
-        if (ultimateTargetClass.isAnnotationPresent(SecsMsgListener.class)) {
-            SecsMsgListener listenerAnnotation = bean.getClass().getAnnotation(SecsMsgListener.class);
-             if(Objects.nonNull(listenerAnnotation) && AbstractSecsMsgListener.class.isAssignableFrom(ultimateTargetClass)) {
-            	 
+        if (  AbstractSecsMsgListener.class.isAssignableFrom(ultimateTargetClass)) {
+			/* 暂时用不上, 忽略
+			 * SecsMsgListener listenerAnnotation =
+			 * bean.getClass().getAnnotation(SecsMsgListener.class);
+			 */             
             	 Field handlers = ReflectionUtils.findField(bean.getClass(), AbstractSecsMsgListener.HANDLERS_STR );
             	 if(Objects.nonNull(handlers)) {
             		 
@@ -54,7 +55,7 @@ public class SecsAnnotationPostProcessor implements BeanPostProcessor {
             	
             
             	
-             }
+      
           
         }
         return bean;
@@ -82,7 +83,7 @@ public class SecsAnnotationPostProcessor implements BeanPostProcessor {
 							method.setAccessible(true) ;
 							method.invoke(bean, i);
 						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-							log.error("invocke_error:{}" , e);
+							logger.error("invocke_error:{}" , e);
 						}
 					};
 					

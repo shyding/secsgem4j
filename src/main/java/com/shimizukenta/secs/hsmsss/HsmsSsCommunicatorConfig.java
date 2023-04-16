@@ -26,7 +26,7 @@ public class HsmsSsCommunicatorConfig extends AbstractHsmsCommunicatorConfig {
 	
 	private static final long serialVersionUID = 71663164318605890L;
 	
-	private final NumberProperty sessionId = NumberProperty.newInstance(10);
+	private final NumberProperty sessionId = NumberProperty.newInstance( 0 );
 	private final SocketAddressProperty socketAddr = SocketAddressProperty.newInstance(null);
 	
 	public HsmsSsCommunicatorConfig() {

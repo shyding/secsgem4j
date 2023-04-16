@@ -129,6 +129,7 @@ public class ExampleHsmsGsPassive {
 					int func = msg.getFunction();
 					boolean wbit = msg.wbit();
 					
+					
 					try {
 						
 						switch (strm) {
