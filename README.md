@@ -3,7 +3,7 @@
 ## Introduction
 
 This library is SEMI-SECS-communicate implementation on Java8.
-This is the secsgem driver (e4,e5,e30)
+This is the secsgem driver (SEMI-e4,SEMI-e5,SEMI-e30 ,SEMI-E37 )
 
 
 [Demo]: https://github.com/shyding/secsgem4j-demo.git
