@@ -572,111 +572,40 @@ public class DemoHandler extends AbstractSecsMsgListener {
 
 ## GEM Compliance
 
-| GEM COMPLIANCE STATEMENT                           |
+​                                                                                   **GEM COMPLIANCE STATEMENT**                           
 
 +=======================================+=================+=========+=========+
 
-| **Fundamental GEM Requirements**    | **Implemented** | **GEM Compliant** |
-
-+---------------------------------------+-----------------+---------+---------+
-
-| `State Models`_            | Yes ✓      | No    | No    |
-
-+---------------------------------------+-----------------+---------+     +
-
-| `Equipment Processing States`_     | No        | No    |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| Host-Initiated S1,F13/F14 Scenario   | Yes ✓      | Yes ✓  |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| Event Notification           | Yes ✓      | Yes ✓  |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| On-Line Identification         | Yes ✓      | Yes ✓  |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| Error Messages             | Yes ✓      | Yes ✓  |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| `Documentation`_            | Yes ✓      | No    |     |
-
-+---------------------------------------+-----------------+---------+     +
-
-| `Control (Operator Initiated)`_    | Yes ✓      | No    |     |
-
-+---------------------------------------+-----------------+---------+---------+
-
-| **Additional Capabilities**      | **Implemented** | **GEM Compliant** |
-
-+---------------------------------------+-----------------+-------------------+
-
-| Establish Communications        | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Dynamic Event Report Configuration`_ | Yes ✓      | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| Variable Data Collection        | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Trace Data Collection`_        | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| Status Data Collection         | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Alarm Management`_          | Yes ✓      | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Remote Control`_           | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Equipment Constants`_         | Yes ✓      | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Process Recipe Management`_      | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Material Movement`_          | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Equipment Terminal Services`_     | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Clock`_                | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Limits Monitoring`_          | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| `Spooling`_              | No        | No         |
-
-+---------------------------------------+-----------------+-------------------+
-
-| Control (Host-Initiated)        | Yes ✓      | Yes ✓       |
-
-+---------------------------------------+-----------------+-------------------+
+| **Fundamental GEM Requirements**   | **Implemented** | **GEM Compliant** | **PLANED** |
+| ---------------------------------- | --------------- | ----------------- | ---------- |
+| State Models                       | ✓               | No                | ✓          |
+| Equipment Processing States        | No              |                   | ✓          |
+| Host-Initiated S1,F13/F14 Scenario | ✓               | ✓                 | ✓          |
+| Event Notification                 | ✓               | ✓                 | ✓          |
+| On-Line Identification             | ✓               | ✓                 | ✓          |
+| Error Messages                     | ✓               | ✓                 | ✓          |
+| Documentation                      | ✓               | No                | ✓          |
+| Control (Operator Initiated)       | ✓               | No                | ✓          |
+| **Additional Capabilities**        | **Implemented** | **GEM Compliant** | **PLANED** |
+| Establish Communications           | ✓               | ✓                 | ✓          |
+| Dynamic Event Report Configuration | ✓               | No                | ✓          |
+| Variable Data Collection           | ✓               | ✓                 | ✓          |
+| Trace Data Collection              | No              | No                | No         |
+| Status Data Collection             | ✓               | ✓                 | ✓          |
+| Alarm Management                   | ✓               | No                | ✓          |
+| Remote Control                     | ✓               | ✓                 | ✓          |
+| Equipment Constants                | ✓               | No                | ✓          |
+| Process Recipe Management          | No              | No                | No         |
+| Material Movement]                 | No              | No                | No         |
+| Equipment Terminal Services        | ✓               | ✓                 | ✓          |
+| Clock                              | No              | No                | ✓          |
+| Limits Monitoring                  | No              | No                | No         |
+| Spooling                           | No              | No                | No         |
+| Control (Host-Initiated)           | ✓               | ✓                 | ✓          |
 
 
+
+**!!! which is PLANED and marked by ✓  is planed to be Implemented   ;**
 
 State Models
 
