@@ -2,12 +2,8 @@ package com.shimizukenta.secs.ext.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +18,6 @@ import com.shimizukenta.secs.OpenAndCloseable;
 import com.shimizukenta.secs.SecsCommunicator;
 import com.shimizukenta.secs.ext.annotation.SecsMsgListener;
 import com.shimizukenta.secs.ext.config.AbstractSecsMsgListener;
-import com.shimizukenta.secs.ext.config.SecsAutoConfiguration;
 import com.shimizukenta.secs.hsms.HsmsMessage;
 import com.shimizukenta.secs.hsms.HsmsMessageType;
 import com.shimizukenta.secs.hsmsgs.HsmsGsCommunicator;
@@ -36,7 +31,6 @@ public class SecsUtils {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(SecsUtils.class);
-	private static final OpenAndCloseable HsmsSsCommunicator = null;
 
 
 	

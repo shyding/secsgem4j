@@ -14,6 +14,8 @@ import com.shimizukenta.secs.ext.config.AbstractSecsMsgListener;
 import com.shimizukenta.secs.ext.config.SecsConfigurationRegistrar;
 import com.shimizukenta.secs.ext.properties.HsmsGsCommunicatorConfigurationproperties;
 import com.shimizukenta.secs.ext.properties.HsmsSsCommunicatorConfigurationproperties;
+import com.shimizukenta.secs.ext.properties.Secs1OnTcpIpReceiverCommunicatorConfigProperties;
+import com.shimizukenta.secs.ext.properties.Secs1OnTcpIpSenderCommunicatorConfigProperties;
 import com.shimizukenta.secs.ext.properties.SecsCommunicatorConfigProperties;
 import com.shimizukenta.secs.ext.util.SpringUtils;
 
@@ -25,7 +27,7 @@ import com.shimizukenta.secs.ext.util.SpringUtils;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(value = {SpringUtils.class ,  SecsConfigurationRegistrar.class , HsmsSsCommunicatorConfigurationproperties.class ,HsmsGsCommunicatorConfigurationproperties.class , SecsCommunicatorConfigProperties.class  } )
+@Import(value = {SpringUtils.class ,  SecsConfigurationRegistrar.class , HsmsSsCommunicatorConfigurationproperties.class ,HsmsGsCommunicatorConfigurationproperties.class , Secs1OnTcpIpReceiverCommunicatorConfigProperties.class,Secs1OnTcpIpSenderCommunicatorConfigProperties.class ,  SecsCommunicatorConfigProperties.class  } )
 public @interface EnableSecs {
 
 }

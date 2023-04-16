@@ -33,11 +33,7 @@ import com.shimizukenta.secs.secs1ontcpip.Secs1OnTcpIpReceiverCommunicatorConfig
 public class SecsCommunicatorConfigProperties  {
 
 
-	
-    /**
-	 * @Fields 序列化
-	 */
-	private static final long serialVersionUID = 1L;
+
 
 
 	@ConditionalOnBean(HsmsGsCommunicatorConfigurationproperties.class)

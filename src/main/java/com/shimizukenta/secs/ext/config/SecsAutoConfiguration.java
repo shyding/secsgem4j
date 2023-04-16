@@ -2,8 +2,6 @@ package com.shimizukenta.secs.ext.config;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,6 +17,10 @@ import com.shimizukenta.secs.hsmsgs.HsmsGsCommunicator;
 import com.shimizukenta.secs.hsmsgs.HsmsGsCommunicatorConfig;
 import com.shimizukenta.secs.hsmsss.HsmsSsCommunicator;
 import com.shimizukenta.secs.hsmsss.HsmsSsCommunicatorConfig;
+import com.shimizukenta.secs.secs1ontcpip.Secs1OnTcpIpCommunicator;
+import com.shimizukenta.secs.secs1ontcpip.Secs1OnTcpIpCommunicatorConfig;
+import com.shimizukenta.secs.secs1ontcpip.Secs1OnTcpIpReceiverCommunicator;
+import com.shimizukenta.secs.secs1ontcpip.Secs1OnTcpIpReceiverCommunicatorConfig;
 
 
 @Configuration(proxyBeanMethods = true)
@@ -26,7 +28,7 @@ import com.shimizukenta.secs.hsmsss.HsmsSsCommunicatorConfig;
 @EnableConfigurationProperties(SecsCommunicatorConfigProperties.class)
 public class SecsAutoConfiguration  {
 
-	private final Logger logger = LoggerFactory.getLogger(SecsAutoConfiguration.class);
+//	private final Logger logger = LoggerFactory.getLogger(SecsAutoConfiguration.class);
 
 
 	@Autowired(required = false)
@@ -58,6 +60,26 @@ public class SecsAutoConfiguration  {
 
 	
 	
+	
+	@ConditionalOnBean( Secs1OnTcpIpCommunicatorConfig.class)
+	@Bean
+	public SecsCommunicator secs1OnTcpIpCommunicator(@Autowired Secs1OnTcpIpCommunicatorConfig secs1OnTcpIpCommunicatorConfig) {
+
+		Secs1OnTcpIpCommunicator comm = Secs1OnTcpIpCommunicator.newInstance( secs1OnTcpIpCommunicatorConfig) ;
+		return  (SecsCommunicator) SecsUtils.wrappSecsCommunicator(comm , list);
+		  
+		 }
+	
+	
+	@ConditionalOnBean( Secs1OnTcpIpReceiverCommunicatorConfig.class)
+	@Bean
+	public SecsCommunicator hsmsGsCommunicator(@Autowired Secs1OnTcpIpReceiverCommunicatorConfig secs1OnTcpIpReceiverCommunicatorConfig) {
+
+
+		 Secs1OnTcpIpReceiverCommunicator comm = Secs1OnTcpIpReceiverCommunicator.newInstance(secs1OnTcpIpReceiverCommunicatorConfig);
+		return (SecsCommunicator) SecsUtils.wrappSecsCommunicator(comm , list);
+		  
+		 }
 	
 	
 	

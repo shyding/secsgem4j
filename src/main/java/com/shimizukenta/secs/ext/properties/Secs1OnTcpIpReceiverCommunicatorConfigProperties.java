@@ -10,7 +10,7 @@ import com.shimizukenta.secs.ext.util.ConfigConstants;
 import com.shimizukenta.secs.gem.ClockType;
 
 @Role( BeanDefinition.ROLE_INFRASTRUCTURE )
-@ConditionalOnProperty(  prefix = ConfigConstants.ADDITIONS_SECS_SECS1_RECEIVER , havingValue = ConfigConstants.TRUE  )
+@ConditionalOnProperty(  prefix = ConfigConstants.ADDITIONS_SECS_SECS1_RECEIVER ,name = ConfigConstants.ENABLED  ,   havingValue = ConfigConstants.TRUE  )
 @Configuration
 @ConfigurationProperties(prefix = ConfigConstants.ADDITIONS_SECS_SECS1_RECEIVER , ignoreUnknownFields = true)
 public class Secs1OnTcpIpReceiverCommunicatorConfigProperties extends AbstractSecsConfigProperties {

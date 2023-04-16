@@ -10,7 +10,7 @@ import com.shimizukenta.secs.ext.util.ConfigConstants;
 
 @Role( BeanDefinition.ROLE_INFRASTRUCTURE )
 @Configuration
-@ConditionalOnProperty(prefix = ConfigConstants.ADDITIONS_SECS_SECS1_SENDER , havingValue = ConfigConstants.TRUE )
+@ConditionalOnProperty(prefix = ConfigConstants.ADDITIONS_SECS_SECS1_SENDER ,    name = ConfigConstants.ENABLED  ,havingValue = ConfigConstants.TRUE )
 @ConfigurationProperties(prefix = ConfigConstants.ADDITIONS_SECS_SECS1_SENDER , ignoreUnknownFields = true)
 public class Secs1OnTcpIpSenderCommunicatorConfigProperties extends AbstractSecsConfigProperties {
 
